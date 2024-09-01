@@ -1,0 +1,33 @@
+mport streamlit as st
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
+
+# Load the LLaMA 3.1 model and tokenizer
+model_name = "huggingface/llama-3.1"  # Replace with the actual model path if needed
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name)
+
+# Streamlit app
+st.title("Student Management System - Book Information Agent")
+
+# Input box for student question
+student_query = st.text_input("Ask a question about a book:")
+
+# Function to generate a response
+def generate_response(query):
+    inputs = tokenizer(query, return_tensors="pt")
+    outputs = model.generate(**inputs, max_length=50)
+    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    return response
+
+# Button to submit query
+if st.button("Get Answer"):
+    if student_query:
+        with st.spinner("Generating response..."):
+            response = generate_response(student_query)
+            st.write(response)
+    else:
+        st.write("Please enter a question.")
+
+# Log user query and response (basic logging to console)
+st.write(f"User query: {student_query}")
