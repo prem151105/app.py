@@ -31,3 +31,4 @@ if st.button("Get Answer"):
 
 # Log user query and response (basic logging to console)
 st.write(f"User query: {student_query}")
+
